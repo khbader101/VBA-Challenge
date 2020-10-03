@@ -1,0 +1,80 @@
+Sub HW2_Stock_Market()
+
+
+
+Dim ws As Worksheet
+Dim ticker As String
+Dim vol As Long
+Dim y_open As Double
+Dim y_close As Double
+Dim y_change As Double
+Dim p_change As Double
+Dim Summary_Table As Long
+Dim starting_open As Long
+
+
+For Each ws In ThisWorkbook.Worksheets
+    EndRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+    starting_open = 2
+    vol = 0
+    ws.Cells(1, 9).Value = "Ticker"
+    ws.Cells(1, 10).Value = "Yearly Change"
+    ws.Cells(1, 11).Value = "Percent Change"
+    ws.Cells(1, 12).Value = "Total Stock Volume"
+
+
+    Summary_Table = 2
+    
+        For i = 2 To EndRow
+            
+            If ws.Cells(i, 1).Value <> ws.Cells(i + 1, 1).Value Then
+            
+                
+                vol = ws.Cells(i, 7).Value + vol
+                ticker = ws.Cells(i, 1).Value
+                y_open = ws.Cells(starting_open, 3).Value
+                y_close = ws.Cells(i, 6).Value
+                y_change = y_close - y_open
+                p_change = (y_change) / y_close
+                starting_open = i + 1
+    
+                    
+                ws.Cells(Summary_Table, 9).Value = ticker
+                ws.Cells(Summary_Table, 10).Value = y_change
+                ws.Cells(Summary_Table, 11).Value = p_change
+                ws.Cells(Summary_Table, 12).Value = vol
+                Summary_Table = Summary_Table + 1
+                vol = 0
+                Else
+                    vol = vol + ws.Cells(i, 7).Value
+                
+                
+               End If
+        Next i
+    
+
+
+tot_row = ws.Cells(Rows.Count, "I").End(xlUp).Row
+    
+    
+    	For x = 2 To tot_row
+      
+     		If ws.Cells(x, 10).Value >= 0 Then
+      
+      			ws.Cells(x, 10).Interior.ColorIndex = 4
+        
+      		Else
+      
+      	 		 ws.Cells(x, 10).Interior.ColorIndex = 3
+        
+      		End If
+         
+	Next x
+
+ws.Columns("K").NumberFormat = "0.00%"
+ws.Columns("J").NumberFormat = "0.00"
+
+Next ws
+
+
+End Sub
